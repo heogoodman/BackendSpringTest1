@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		
+		<!-- StringPrinter 클래스를 Spring Bean으로 등록 -->
+		<bean id="strPrinter" class="myspring.di.xml.StringPrinter" /> <!-- 클래스패스등록 -->
+		
+		<!-- ConsolePrinter 클래스를 Spring Bean으로 등록 -->
+		<bean id="conPrinter" class="myspring.di.xml.ConsolePrinter" />  <!-- dao가 printer -->
+		
+		<!-- Hello 클래스를 Spring Bean으로 등록 -->
+		<bean id="hello" class="myspring.di.xml.Hello" scope="singleton">
+			<!-- Setter Injection -->
+			<property name="name" value="스프링" /> <!-- 이게 세터임 -->
+			<property name="printer" ref="strPrinter"/> <!-- 위에서등록한 id를 적어준다 -->
+		</bean>   <!-- name="name"이 setName을찾는거고 -->
+		  <!-- name="printer"는 setPrinter를 찾는거임;; -->
+		  
+		<bean id="helloC" class="myspring.di.xml.Hello">
+						<!-- Constructor Injection -->
+				<constructor-arg index="0" value="생성자"></constructor-arg>
+				<constructor-arg index="1" ref="conPrinter"></constructor-arg>
+				<!-- 같이섞어써도됨 -->
+				<property name="names"> <!-- 바디가있어서 끝시작을해줘야함 -->
+					<list>
+						<value>SpringFramework</value>
+						<value>SpringBoot</value>
+						<value>SpringCloud</value>
+					</list>
+				</property>
+		</bean>  
+		  
+</beans>         

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="myspring.user.dao.mapper.UserMapper">
+<!-- <mapper namespace="userNS"> -->
+        <!-- <T> T seletOne(String statement, Object parameter) -->
+        <!-- 이쿼리를 자바 소스에서 실행할때 statement에 id값넣기 selectUserById -->
+        <!-- parameter는 value로 들어온다 value변수는 아무거나써도됨  -->
+	<select id="selectUserById" parameterType="string" resultType="User"> 
+		select * from users where userid=#{value}             <!-- SqlMapConfig.xml에 있는것  -->
+	</select>
+
+	<select id="selectUserList" resultType="User">
+		select * from users order by id
+	</select>
+
+	<insert id="insertUser" parameterType="User">
+		insert into users (name, email, age, entryDate)
+		values(#{name},#{email},#{age},#{entryDate} )
+	</insert>
+
+	<update id="updateUser" parameterType="User">
+		update users set
+		email = #{email},
+		age = #{age},
+		entryDate = #{entryDate}
+		where name = #{name}
+	</update>
+
+	<delete id="deleteUser" parameterType="string">
+		delete from users where name = #{value}
+	</delete>
+	
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

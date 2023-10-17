@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!--Properties file 정보 설정 -->
+	<context:property-placeholder location="classpath:value.properties" />
+	
+	<!-- DataSource 구현체인 HikariDataSource 를 SpringBean으로 등록 -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" 
+		p:driverClassName="${db.driverClass}"
+		p:jdbcUrl="${db.url}"
+		p:username="${db.username}"
+		p:password="${db.password}"
+	/>
+	
+	
+	<!-- Mybatis-Spring의 SqlSessionFactoryBean 을 SpringBean으로 등록하기 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+			<property name="dataSource" ref="dataSource" /> <!-- setDataSource()메소드임 -->
+																			<!-- ref는 위에Hikari 구현객체 -->
+			<property name="configLocation" value="classpath:mybatis/SqlMapConfig.xml" />
+																			<!-- 이건파일이라 value쓴다 --> <!-- SqlMapConfig이때 UserVO가연결됨 -->
+			<property name="mapperLocations">
+					<list>
+						<value>classpath:mybatis/*Mapper.xml</value> <!-- 로드하기 -->
+					</list>
+			</property>
+	</bean>
+	
+		<!-- SqlSessionTemplate -->
+		<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+				<constructor-arg ref="sqlSessionFactory" /> <!-- 그림에서 의존해서 세팅해줌 --> <!-- ref는 참조한다는 의미 -->
+		</bean>      
+		
+		<!-- Mybatis-Spring의 MapperScannerConfigurer를 SpringBean으로 등록 -->
+		
+		<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> <!-- id는 참조하는애가없어서 안줘도된다 -->
+				<property name="basePackage" value="myspring.user.dao.mapper" />
+				<property name="sqlSessionTemplateBeanName" value="sqlSession" /> <!-- 왼쪽은 원래있는거같고 -->
+											<!-- 여긴ref가 아니고 value로 침 지금까지 의존성 주입과 방법이 좀다름 -->
+		</bean>
+		 
+		 
+		 <!-- DAO, Service Bean Scannig -->
+		 <context:component-scan base-package="myspring.user">
+		 	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		 </context:component-scan>
+		 
+		 
+</beans>
